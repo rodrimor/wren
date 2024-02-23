@@ -2,26 +2,25 @@ package customer_test
 
 import (
 	"testing"
-	"time"
 
 	. "github.com/rodrimor/wren/customer"
 )
 
-func TestLineItem(t *testing.T) {
-	now := time.Now()
-	item := LineItem{
-		Created:       now,
-		BusinessName:  "Example Store, inc",
-		Amount:        9.99,
-		TransactionId: 123456,
+func TestSetAccount(t *testing.T) {
+	var ac Account
+	ac.SetStatusAccount("canceled", "Account canceled due to customer request")
+	if !ac.AccountStatus.Canceled {
+		t.Errorf("Expected status equals true, got false")
+	}
+	ac.AccountStatus.Canceled = false
+	ac.SetStatusAccount("indebt", "indebt account")
+	if !ac.AccountStatus.DebitNegotiation {
+		t.Errorf("Expected status equals true, got false")
+	}
+	ac.AccountStatus.DebitNegotiation = false
+	ac.SetStatusAccount("admin", "Account block due to the need of further documentation")
+	if !ac.AccountStatus.Warning {
+		t.Errorf("Expected Warning")
 	}
 
-	// Test created time
-	if item.Created != now {
-		t.Errorf("Expected created time to be %v, got %v", now, item.Created)
-	}
-
-	if item.BusinessName != "Example Store, inc" {
-		t.Errorf("Expected Business name %s, got %s", "Example Store, inc", item.BusinessName)
-	}
 }
